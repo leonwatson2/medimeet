@@ -8,6 +8,8 @@ import { z } from "zod";
 import { CustomFormField } from "../CustomFormField";
 import { SubmitButton } from "../SubmitButton";
 
+const LoginFormField = CustomFormField<LoginFormSchema>;
+
 export type FormFieldType =
   | "input"
   | "checkbox"
@@ -43,7 +45,7 @@ export const PatientForm = () => {
             <h1 className="header"> Hi there 🍋</h1>
             <p className="text-dark-700"> Schedule First Appointment</p>
           </section>
-          <CustomFormField
+          <LoginFormField
             fieldType={"input"}
             name="name"
             label="Full Name"
@@ -51,7 +53,7 @@ export const PatientForm = () => {
             placeholder="ChaseName"
             iconSrc="user.svg"
           />
-          <CustomFormField
+          <LoginFormField
             fieldType="input"
             name="email"
             label="Email"
@@ -59,7 +61,7 @@ export const PatientForm = () => {
             placeholder="johnlocke@lost.com"
             iconSrc="email.svg"
           />
-          <CustomFormField
+          <LoginFormField
             fieldType="phoneInput"
             name="phone"
             label="Phone Number"

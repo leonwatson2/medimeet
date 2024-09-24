@@ -3,7 +3,12 @@
 import { Icons } from "@/lib/types";
 import Image from "next/image";
 import React from "react";
-import { Control, ControllerRenderProps } from "react-hook-form";
+import {
+  Control,
+  ControllerRenderProps,
+  FieldValues,
+  Path,
+} from "react-hook-form";
 import PhoneInput from "react-phone-number-input";
 import { FormFieldType } from "./forms/PatientForm";
 import {
@@ -15,15 +20,14 @@ import {
 } from "./ui/form";
 import { Input } from "./ui/input";
 
-
-const RenderField = ({
+const RenderField = <T extends FieldValues>({
   field,
   fieldType,
   iconSrc,
   iconAlt,
   placeholder,
 }: { field: ControllerRenderProps } & Omit<
-  CustomFormProps,
+  CustomFormProps<T>,
   "control" | "name" | "label"
 >) => {
   switch (fieldType) {
@@ -67,8 +71,9 @@ const RenderField = ({
   }
   return;
 };
-type CustomFormProps = {
-  control: Control<any>;
+
+type CustomFormProps<T extends FieldValues> = {
+  control: Control<T, Record<string, string>>;
   fieldType: FormFieldType;
   name: string;
   label?: string;
@@ -80,21 +85,26 @@ type CustomFormProps = {
   children?: React.ReactNode;
   renderSkeleton?: (field: unknown) => React.ReactNode;
 };
-export const CustomFormField = ({
+
+export const CustomFormField = <T extends FieldValues>({
   control,
   name,
   label,
   fieldType,
   ...props
-}: CustomFormProps) => {
+}: CustomFormProps<T>) => {
   return (
     <FormField
       control={control}
-      name={name}
+      name={name as Path<T>}
       render={({ field }) => (
         <FormItem>
           {fieldType !== "checkbox" && label && <FormLabel>{label}</FormLabel>}
-          <RenderField field={field} fieldType={fieldType} {...props} />
+          <RenderField<T>
+            field={field as ControllerRenderProps}
+            fieldType={fieldType}
+            {...props}
+          />
           <FormMessage className="shad-error" />
         </FormItem>
       )}
