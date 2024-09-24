@@ -1,38 +1,84 @@
 "use client";
+
+import { Icons } from "@/lib/types";
+import Image from "next/image";
 import React from "react";
+import { Control, ControllerRenderProps } from "react-hook-form";
+import PhoneInput from "react-phone-number-input";
+import { FormFieldType } from "./forms/PatientForm";
 import {
+  FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormControl,
-  FormDescription,
   FormMessage,
 } from "./ui/form";
 import { Input } from "./ui/input";
-import { Control, ControllerRenderProps } from "react-hook-form";
-import { FormFieldType } from "./forms/PatientForm";
+
+
+const RenderField = ({
+  field,
+  fieldType,
+  iconSrc,
+  iconAlt,
+  placeholder,
+}: { field: ControllerRenderProps } & Omit<
+  CustomFormProps,
+  "control" | "name" | "label"
+>) => {
+  switch (fieldType) {
+    case "input":
+      return (
+        <div className="flex rounded-md border border-dark-500 bg-dark-400">
+          {iconSrc && (
+            <Image
+              className="ml-2"
+              src={"/assets/icons/" + iconSrc}
+              height={24}
+              width={24}
+              alt={iconAlt || "ICON"}
+            />
+          )}
+          <FormControl>
+            <Input
+              placeholder={placeholder}
+              {...field}
+              className="shad-input border-0"
+            />
+          </FormControl>
+        </div>
+      );
+    case "phoneInput":
+      return (
+        <FormControl>
+          <PhoneInput
+            defaultCountry="US"
+            placeholder={placeholder}
+            international
+            value={field.value}
+            onChange={field.onChange}
+            withCountryCallingCode
+            className="input-phone"
+          />
+        </FormControl>
+      );
+    default:
+      break;
+  }
+  return;
+};
 type CustomFormProps = {
   control: Control<any>;
   fieldType: FormFieldType;
   name: string;
   label?: string;
   placeholder?: string;
-  iconSrc?: string;
+  iconSrc?: Icons;
   iconAlt?: string;
   disabled?: boolean;
   showTimeSelect?: boolean;
   children?: React.ReactNode;
   renderSkeleton?: (field: unknown) => React.ReactNode;
-};
-
-const RenderField = ({
-  field,
-  ...props
-}: { field: ControllerRenderProps } & Omit<
-  CustomFormProps,
-  "control" | "name" | "label" | "fieldType"
->) => {
-  return <Input placeholder="chase321" {...field} {...props} />;
 };
 export const CustomFormField = ({
   control,
@@ -48,8 +94,7 @@ export const CustomFormField = ({
       render={({ field }) => (
         <FormItem>
           {fieldType !== "checkbox" && label && <FormLabel>{label}</FormLabel>}
-          <RenderField field={field} {...props} />
-          <FormDescription>This is your public username.</FormDescription>
+          <RenderField field={field} fieldType={fieldType} {...props} />
           <FormMessage className="shad-error" />
         </FormItem>
       )}

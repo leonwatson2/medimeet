@@ -1,10 +1,12 @@
 "use client";
+import { Form } from "@/components/ui/form";
+import { loginFormSchema } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Form } from "../ui/form";
-import { Button } from "../ui/button";
 import { CustomFormField } from "../CustomFormField";
+import { SubmitButton } from "../SubmitButton";
 
 export type FormFieldType =
   | "input"
@@ -15,21 +17,20 @@ export type FormFieldType =
   | "skeleton"
   | "datePicker";
 
-const loginFormSchema = z.object({
-  username: z.string().min(4, {
-    message: "Username must be longer than 4 characters. Sorry 🤷",
-  }),
-});
 type LoginFormSchema = z.infer<typeof loginFormSchema>;
 export const PatientForm = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const form = useForm<LoginFormSchema>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
-      username: "",
+      name: "",
+      email: "",
+      phone: "",
     },
   });
-  const onSubmit = (values: LoginFormSchema) => {
-    console.log(values);
+  const onSubmit = async (userData: LoginFormSchema) => {
+    setIsLoading(true);
+    console.log(userData);
   };
   return (
     <div>
@@ -44,10 +45,28 @@ export const PatientForm = () => {
           </section>
           <CustomFormField
             fieldType={"input"}
-            name="username"
+            name="name"
+            label="Full Name"
             control={form.control}
+            placeholder="ChaseName"
+            iconSrc="user.svg"
           />
-          <Button type="submit">Submit</Button>
+          <CustomFormField
+            fieldType="input"
+            name="email"
+            label="Email"
+            control={form.control}
+            placeholder="johnlocke@lost.com"
+            iconSrc="email.svg"
+          />
+          <CustomFormField
+            fieldType="phoneInput"
+            name="phone"
+            label="Phone Number"
+            control={form.control}
+            placeholder="(392) 123-4567"
+          />
+          <SubmitButton isLoading={isLoading}>Get Started</SubmitButton>
         </form>
       </Form>
     </div>
