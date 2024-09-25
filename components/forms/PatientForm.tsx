@@ -7,6 +7,8 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { CustomFormField } from "../CustomFormField";
 import { SubmitButton } from "../SubmitButton";
+import { useRouter } from "next/navigation";
+import { createUser } from "@/lib/actions/patient.action";
 
 const LoginFormField = CustomFormField<LoginFormSchema>;
 
@@ -21,6 +23,7 @@ export type FormFieldType =
 
 type LoginFormSchema = z.infer<typeof loginFormSchema>;
 export const PatientForm = () => {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const form = useForm<LoginFormSchema>({
     resolver: zodResolver(loginFormSchema),
@@ -33,6 +36,13 @@ export const PatientForm = () => {
   const onSubmit = async (userData: LoginFormSchema) => {
     setIsLoading(true);
     console.log(userData);
+    try {
+      const user = await createUser(userData);
+      console.log(user);
+      if(user) router.push(`/patients/${user.$id}`);
+    } catch (error) {
+      console.error(error);
+    }
   };
   return (
     <div>
