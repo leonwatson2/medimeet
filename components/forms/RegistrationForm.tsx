@@ -127,5 +127,5 @@ function Header({ children }: { children: ReactNode }) {
 }
 
 function TwoColumnGroup({ children }: { children: ReactNode }) {
-  return <div className="flex flex-col gap-6 xl:flex-row">{children}</div>;
+  return <div className="flex flex-col gap-6 just xl:flex-row xl:justify-between">{children}</div>;
 }
