@@ -278,6 +278,7 @@
 }
 
 @import 'react-phone-number-input/style.css';
+@import 'react-datepicker/dist/react-datepicker.css';
 
 /* =====  REACT-DATEPICKER OVERRIDES */
 .react-datepicker-wrapper.date-picker {
