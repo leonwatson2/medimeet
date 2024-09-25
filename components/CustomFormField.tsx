@@ -1,6 +1,6 @@
 "use client";
 
-import { Icons } from "@/lib/types";
+import { Icons } from "@/types/types";
 import Image from "next/image";
 import React from "react";
 import {
