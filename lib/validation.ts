@@ -13,3 +13,7 @@ export const loginFormSchema = z.object({
   email: z.string().email(),
   phone: z.string().refine(validator.isMobilePhone, {message: "Invalid phone number"}),
 });
+
+export const registrationFormSchema = z.object({
+  });
+  

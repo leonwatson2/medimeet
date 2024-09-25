@@ -19,13 +19,16 @@ import {
   FormMessage,
 } from "./ui/form";
 import { Input } from "./ui/input";
-
+import DatePicker from "react-datepicker";
 const RenderField = <T extends FieldValues>({
   field,
   fieldType,
   iconSrc,
   iconAlt,
   placeholder,
+  showTimeSelect,
+  dateFormat,
+  renderSkeleton,
 }: { field: ControllerRenderProps } & Omit<
   CustomFormProps<T>,
   "control" | "name" | "label"
@@ -66,6 +69,29 @@ const RenderField = <T extends FieldValues>({
           />
         </FormControl>
       );
+    case "datePicker":
+      return (
+        <div className="flex rounded-md border border-dark-500 bg-dark-400">
+          <Image
+            src="/assets/icons/calendar.svg"
+            height={24}
+            width={24}
+            alt="calendar"
+            className="ml-2"
+          />
+          <FormControl>
+            <DatePicker
+              selected={field.value}
+              onChange={(date) => field.onChange(date)}
+              showTimeSelect={showTimeSelect}
+              dateFormat={dateFormat ?? "MM/dd/yyyy"}
+              className="date-picker"
+            />
+          </FormControl>
+        </div>
+      );
+    case "skeleton":
+      return renderSkeleton ? renderSkeleton(field) : null;
     default:
       break;
   }
@@ -80,10 +106,11 @@ type CustomFormProps<T extends FieldValues> = {
   placeholder?: string;
   iconSrc?: Icons;
   iconAlt?: string;
+  dateFormat?: string;
   disabled?: boolean;
   showTimeSelect?: boolean;
   children?: React.ReactNode;
-  renderSkeleton?: (field: unknown) => React.ReactNode;
+  renderSkeleton?: (field: ControllerRenderProps) => React.ReactNode;
 };
 
 export const CustomFormField = <T extends FieldValues>({
