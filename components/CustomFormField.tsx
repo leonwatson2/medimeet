@@ -20,6 +20,9 @@ import {
 } from "./ui/form";
 import { Input } from "./ui/input";
 import DatePicker from "react-datepicker";
+import { Checkbox } from "./ui/checkbox";
+import { Select, SelectContent, SelectTrigger, SelectValue } from "./ui/select";
+
 const RenderField = <T extends FieldValues>({
   field,
   fieldType,
@@ -29,10 +32,10 @@ const RenderField = <T extends FieldValues>({
   showTimeSelect,
   dateFormat,
   renderSkeleton,
-}: { field: ControllerRenderProps } & Omit<
-  CustomFormProps<T>,
-  "control" | "name" | "label"
->) => {
+  name,
+  label,
+  children,
+}: { field: ControllerRenderProps } & Omit<CustomFormProps<T>, "control">) => {
   switch (fieldType) {
     case "input":
       return (
@@ -90,6 +93,36 @@ const RenderField = <T extends FieldValues>({
           </FormControl>
         </div>
       );
+    case "select":
+      return (
+        <FormControl>
+          <Select onValueChange={field.onChange} defaultValue={field.value}>
+            <FormControl>
+              <SelectTrigger className="shad-select-trigger">
+                <SelectValue placeholder={placeholder} />
+              </SelectTrigger>
+            </FormControl>
+            <SelectContent className="shad-select-content">
+              {children}
+            </SelectContent>
+          </Select>
+        </FormControl>
+      );
+    case "checkbox":
+      return (
+        <FormControl>
+          <div className="flex items-center gap-4">
+            <Checkbox
+              id={name}
+              checked={field.value}
+              onChange={field.onChange}
+            />
+            <FormLabel htmlFor={name} className="checkbox-label">
+              {label}
+            </FormLabel>
+          </div>
+        </FormControl>
+      );
     case "skeleton":
       return renderSkeleton ? renderSkeleton(field) : null;
     default:
@@ -125,11 +158,12 @@ export const CustomFormField = <T extends FieldValues>({
       control={control}
       name={name as Path<T>}
       render={({ field }) => (
-        <FormItem>
+        <FormItem className="flex-1">
           {fieldType !== "checkbox" && label && <FormLabel>{label}</FormLabel>}
           <RenderField<T>
             field={field as ControllerRenderProps}
             fieldType={fieldType}
+            name={name}
             {...props}
           />
           <FormMessage className="shad-error" />

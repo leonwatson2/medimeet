@@ -1,4 +1,3 @@
-import { FormFooter } from "@/components/forms/FormFooter";
 import { ImagesFiles } from "@/types/types";
 import Image from "next/image";
 import Link from "next/link";
