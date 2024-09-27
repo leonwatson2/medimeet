@@ -1,5 +1,7 @@
 import Image from "next/image";
+
 import { Icons } from "@/types/types";
+
 import { Button } from "./ui/button";
 
 type SubmitButtonProps = {

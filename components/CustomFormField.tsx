@@ -1,8 +1,8 @@
 "use client";
 
-import { Icons } from "@/types/types";
 import Image from "next/image";
 import React from "react";
+import DatePicker from "react-datepicker";
 import {
   Control,
   ControllerRenderProps,
@@ -10,18 +10,27 @@ import {
   Path,
 } from "react-hook-form";
 import PhoneInput from "react-phone-number-input";
-import { FormFieldType } from "./forms/PatientForm";
+
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from "./ui/form";
-import { Input } from "./ui/input";
-import DatePicker from "react-datepicker";
-import { Checkbox } from "./ui/checkbox";
-import { Select, SelectContent, SelectTrigger, SelectValue } from "./ui/select";
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+
+import { Icons } from "@/types/types";
+
+import { FormFieldType } from "./forms/PatientForm";
 
 const RenderField = <T extends FieldValues>({
   field,
@@ -122,6 +131,19 @@ const RenderField = <T extends FieldValues>({
             </FormLabel>
           </div>
         </FormControl>
+      );
+    case "textarea":
+      return (
+        <div className="flex rounded-md border border-dark-500 bg-dark-400">
+          <FormControl>
+            <Textarea
+              placeholder={placeholder}
+              {...field}
+              className="shad-textArea"
+              disabled={field.disabled}
+            />
+          </FormControl>
+        </div>
       );
     case "skeleton":
       return renderSkeleton ? renderSkeleton(field) : null;

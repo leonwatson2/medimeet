@@ -102,7 +102,9 @@
   .checkbox-label {
     @apply cursor-pointer text-sm font-medium text-dark-700 peer-disabled:cursor-not-allowed peer-disabled:opacity-70 md:leading-none;
   }
-
+  .doctor-image {
+    @apply rounded-full border border-dark-500
+  }
   /* ==== File Upload */
   .file-upload {
     @apply text-12-regular flex cursor-pointer  flex-col items-center justify-center gap-3 rounded-md border border-dashed border-dark-500 bg-dark-400 p-5;
@@ -110,6 +112,9 @@
 
   .file-upload_label {
     @apply flex flex-col justify-center gap-2 text-center text-dark-600;
+  }
+  .file-upload-image {
+    @apply max-h-[400px] overflow-hidden object-cover;
   }
 
   /* ==== Stat Card */

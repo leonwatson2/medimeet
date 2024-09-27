@@ -1,14 +1,28 @@
-import { RegistrationForm } from "@/components/forms/RegistrationForm";
-import { HalfPageFormContainer } from "@/components/layouts/HalfPageFormContiainer";
-import { getUser } from "@/lib/actions/patient.action";
+import Image from "next/image";
 import { FC } from "react";
 
-const Register:FC<SearchParamProps> = async ({ params: { userId }}) => {
+import { RegistrationForm } from "@/components/forms/Registration/RegistrationForm";
+import { getUser } from "@/lib/actions/patient.action";
+
+const Register: FC<SearchParamProps> = async ({ params: { userId } }) => {
   const user = await getUser(userId);
   return (
-    <HalfPageFormContainer imgSrc="register-img.png">
-    <RegistrationForm user={user} />
-    </HalfPageFormContainer>
+    <div className="flex h-screen max-h-screen">
+      <section className="remove-scrollbar container">
+        <div className="sub-container max-w-[860px] flex-1 flex-col py-10">
+          <RegistrationForm user={user} />
+          <p className="copyright py-12">© 2024 MediMeet</p>
+        </div>
+      </section>
+
+      <Image
+        src="/assets/images/register-img.png"
+        height={1000}
+        width={1000}
+        alt="patient"
+        className="side-img max-w-[390px]"
+      />
+    </div>
   );
 };
 
