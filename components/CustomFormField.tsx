@@ -124,7 +124,7 @@ const RenderField = <T extends FieldValues>({
             <Checkbox
               id={name}
               checked={field.value}
-              onChange={field.onChange}
+              onCheckedChange={field.onChange}
             />
             <label htmlFor={name} className="checkbox-label">
               {label}
