@@ -1,7 +1,16 @@
 "use server";
 import { ID, Query } from "node-appwrite";
 
-import { users } from "../appwrite.config";
+import {
+  BUCKET_ID,
+  databases,
+  DB_ID,
+  ENDPOINT,
+  PATIENT_COLLECTION,
+  PROJECT_ID,
+  users,
+} from "../appwrite.config";
+import { deleteFile, uploadFile } from "@/lib/actions/appwrite.actions";
 
 export const createUser = async (user: CreateUserParams) => {
   try {
@@ -23,7 +32,7 @@ export const createUser = async (user: CreateUserParams) => {
   }
 };
 
-export const getUser = async (userId:string) => {
+export const getUser = async (userId: string) => {
   try {
     const user = await users.get(userId);
 
@@ -31,7 +40,28 @@ export const getUser = async (userId:string) => {
   } catch (error: any) {
     console.error(error);
   }
-  
-
-
-}
+};
+export const createPatient = async ({
+  identificationDocument,
+  ...patient
+}: RegisterUserParams) => {
+  const file = await uploadFile(identificationDocument);
+  try {
+    const newPatient = await databases.createDocument(
+      DB_ID!,
+      PATIENT_COLLECTION!,
+      ID.unique(),
+      {
+        identificationDocumentId: file?.$id || null,
+        identificationDocumentUrl: `${ENDPOINT}/storage/buckets/${BUCKET_ID}/files/${file?.$id}/view?${PROJECT_ID!}`,
+        ...patient,
+      },
+    );
+    return newPatient;
+  } catch (error: any) {
+    console.log(error);
+    if(file?.$id)
+      await deleteFile(file?.$id)
+    throw new Error("Something went wrong creating the patient")
+  }
+};

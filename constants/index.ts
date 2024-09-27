@@ -1,6 +1,6 @@
 import { RegistrationFormSchema } from "@/components/forms/Registration/RegistrationForm";
 
-export const GenderOptions = ["Male", "Female", "Other"] as const;
+export const GenderOptions = ["male", "female", "other"] as const;
 
 export const Doctors = [
   {
@@ -59,22 +59,22 @@ export const PatientFormDefaultValues: RegistrationFormSchema = {
   email: "",
   phone: "",
   birthDate: new Date(Date.now()),
-  gender: "Male" as Gender,
-  address: "",
-  occupation: "",
-  emergencyContactName: "",
-  emergencyContactNumber: "",
-  primaryPhysician: "",
-  insuranceProvider: "",
-  insurancePolicyNumber: "",
+  gender: "male",
+  address: "374 William S Canning Blvd, Fall River, MA 02721",
+  occupation: "Air Traffic Controller",
+  emergencyContactName: "Jane Locke",
+  emergencyContactNumber: "1(774) 555-1234",
+  primaryPhysician: "Emily Smith",
+  insuranceProvider: "State Health",
+  insurancePolicyNumber: "CYYYX-23498932",
   allergies: "",
   currentMedication: "",
   familyMedicalHistory: "",
   pastMedicalHistory: "",
   identificationType: "Birth Certificate",
-  identificationNumber: "",
+  identificationNumber: "234728392383",
   identificationDocument: [],
-  treatmentConsent: false,
-  disclosureConsent: false,
-  privacyConsent: false,
+  treatmentConsent: true,
+  disclosureConsent: true,
+  privacyConsent: true,
 };

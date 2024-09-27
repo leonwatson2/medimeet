@@ -5,7 +5,7 @@ import { RegistrationForm } from "@/components/forms/Registration/RegistrationFo
 import { getUser } from "@/lib/actions/patient.action";
 
 const Register: FC<SearchParamProps> = async ({ params: { userId } }) => {
-  const user = await getUser(userId);
+  const user = await getUser(userId) as User;
   return (
     <div className="flex h-screen max-h-screen">
       <section className="remove-scrollbar container">

@@ -20,7 +20,9 @@ import {
   IdentificationTypes,
   PatientFormDefaultValues,
 } from "@/constants";
+import { createPatient } from "@/lib/actions/patient.action";
 import { registrationFormSchema } from "@/lib/validation";
+
 
 const RegFormField = CustomFormField<RegistrationFormSchema>;
 
@@ -43,8 +45,34 @@ export const RegistrationForm: FC<RegistrationFormProps> = ({ user }) => {
   });
   const onSubmit = async (registrationData: RegistrationFormSchema) => {
     setIsLoading(true);
+    const formData = new FormData();
 
-    console.log(registrationData, user);
+    if (
+      registrationData.identificationDocument &&
+      registrationData.identificationDocument.length > 0
+    ) {
+      const blobFile = new Blob([registrationData.identificationDocument[0]], {
+        type: registrationData.identificationDocument[0].type,
+      });
+      formData.append("blobFile", blobFile);
+      formData.append(
+        "fileName",
+        registrationData.identificationDocument[0].name,
+      );
+    }
+    try {
+      const patientData = {
+        ...registrationData,
+        birthDate: new Date(registrationData.birthDate),
+        userId: user.$id,
+        identificationDocument: formData,
+      };
+      const patient = await createPatient(patientData);
+      if(patient) router.push(`/patients/${user.$id}/new-appointments/`)
+    } catch (error) {
+      console.error(error);
+    }
+    setIsLoading(false)
   };
   return (
     <div>
@@ -102,6 +130,7 @@ export const RegistrationForm: FC<RegistrationFormProps> = ({ user }) => {
               renderSkeleton={(field) => (
                 <FormControl>
                   <RadioGroup
+                    name="gender"
                     className="flex gap-6 h-11 xl:justify-between"
                     onValueChange={field.onChange}
                     defaultValue={field.value}
@@ -246,7 +275,7 @@ export const RegistrationForm: FC<RegistrationFormProps> = ({ user }) => {
           <RegFormField
             fieldType="skeleton"
             label="Upload Identification"
-            name="identification"
+            name="identificationDocument"
             control={form.control}
             renderSkeleton={(field) => (
               <FormControl>
