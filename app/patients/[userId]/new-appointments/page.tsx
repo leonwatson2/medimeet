@@ -2,13 +2,15 @@ import Image from "next/image";
 import { FC } from "react";
 
 import { AppointmentForm } from "@/components/forms/AppointmentForm";
-import { getUser } from "@/lib/actions/patient.action";
+import { getPatient, getUser } from "@/lib/actions/patient.action";
+import { Patient } from "@/types/appwrite.types";
 import { ImagesFiles } from "@/types/types";
-
 
 const image: ImagesFiles = "appointment-img.png";
 const Page: FC<SearchParamProps> = async ({ params: { userId } }) => {
-  const user: User = (await getUser(userId))!;
+  const user: User = await getUser(userId) as User;
+  const patient: Patient = await getPatient(user.$id) as Patient;
+
   return (
     <div className="flex h-screen max-h-screen">
       <section className="remove-scrollbar container my-auto">
@@ -20,7 +22,7 @@ const Page: FC<SearchParamProps> = async ({ params: { userId } }) => {
             alt="patient"
             className="mb-12 h-10 w-fit"
           />
-          <AppointmentForm user={user} />
+          <AppointmentForm user={user} patient={patient} type="create" />
         </div>
       </section>
       <Image

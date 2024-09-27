@@ -6,6 +6,7 @@ import { z } from "zod";
 
 import { createAppointment } from "@/lib/actions/appointment.actions";
 import { appointmentFormSchema } from "@/lib/validation";
+import { Patient } from "@/types/appwrite.types";
 
 import { CustomFormField } from "../CustomFormField";
 import { SubmitButton } from "../SubmitButton";
@@ -16,11 +17,22 @@ type AppointmentFormSchema = z.infer<typeof appointmentFormSchema>;
 
 type AppointmentFormProps = {
   user: User;
+  type: "create" | "schedule" | "cancel";
+  patient: Patient;
 };
 
 const AppFormField = CustomFormField<AppointmentFormSchema>;
+const PROMPT_TEXT = {
+  create: "Schedule your first appointment with us.",
+  schedule: "Please fill in the form to schedule an appointment.",
+  cancel: "Are you sure you want cancel an appointment.",
+};
 
-export const AppointmentForm: FC<AppointmentFormProps> = ({ user }) => {
+export const AppointmentForm: FC<AppointmentFormProps> = ({
+  user,
+  patient,
+  type,
+}) => {
   const [isLoading, setIsLoading] = useState(false);
   const form = useForm<AppointmentFormSchema>({
     resolver: zodResolver(appointmentFormSchema),
@@ -30,6 +42,7 @@ export const AppointmentForm: FC<AppointmentFormProps> = ({ user }) => {
     setIsLoading(true);
     const data = {
       userId: user.$id,
+      patient: patient.$id,
       ...appointmentData,
     };
     await createAppointment(data);
@@ -43,15 +56,22 @@ export const AppointmentForm: FC<AppointmentFormProps> = ({ user }) => {
           className="space-y-6 flex-1"
         >
           <section className="space-y-4">
-            <h1 className="header"> Hey {user.name} 🍋</h1>
-            <p className="text-dark-700">
-              {" "}
-              Let us know what&lsquo;s going with you.
-            </p>
+            {type === "create" && (
+              <h1 className="header"> Hey {user?.name} 🍋</h1>
+            )}
+            {type === "schedule" && (
+              <h1 className="header"> Schedule an Appointment</h1>
+            )}
+            {type === "cancel" && (
+              <h1 className="header"> Cancel Appointment</h1>
+            )}
+            <p className="text-dark-700">{PROMPT_TEXT[type]}</p>
           </section>
-          <DoctorSelectFormField<AppointmentFormSchema>
-            control={form.control}
-          />
+          {type !== "cancel" && (
+            <DoctorSelectFormField<AppointmentFormSchema>
+              control={form.control}
+            />
+          )}
           <div className="flex flex-col gap-6 xl:flex-row">
             <AppFormField
               name="reason"
@@ -60,24 +80,31 @@ export const AppointmentForm: FC<AppointmentFormProps> = ({ user }) => {
               control={form.control}
               fieldType="textarea"
             />
-            <AppFormField
-              name="note"
-              label="Additional comments/notes"
-              placeholder="ex: Prefer afternoon appointments, if possible"
-              control={form.control}
-              fieldType="textarea"
-            />
+            {type === "create" && (
+              <AppFormField
+                name="note"
+                label="Additional comments/notes"
+                placeholder="ex: Prefer afternoon appointments, if possible"
+                control={form.control}
+                fieldType="textarea"
+              />
+            )}
           </div>
-          <AppFormField
-            name="schedule"
-            label="Expected Appointment Date"
-            control={form.control}
-            fieldType="datePicker"
-            showTimeSelect
-            dateFormat="MMMM d, yyyy h:mm aa"
-          />
+          {type !== "cancel" && (
+            <AppFormField
+              name="schedule"
+              label="Expected Appointment Date"
+              control={form.control}
+              fieldType="datePicker"
+              showTimeSelect
+              dateFormat="MMMM d, yyyy h:mm aa"
+            />
+          )}
 
-          <SubmitButton isLoading={isLoading}>
+          <SubmitButton
+            className={`${type === "cancel" ? "shad-danger-btn" : "shad-primary-btn"} w-full`}
+            isLoading={isLoading}
+          >
             Schedule and Continue
           </SubmitButton>
         </form>

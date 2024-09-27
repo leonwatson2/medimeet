@@ -4,15 +4,10 @@ import { ID } from "node-appwrite";
 import { getDocumentAttributes } from "@/lib/actions/appwrite.actions";
 
 import { APPOINTMENT_COLLECTION, databases, DB_ID } from "../appwrite.config";
-import { getPatient } from "./patient.action";
-
-
 
 export const createAppointment = async (appointmentData: CreateAppointmentParams) => {
-  const patient = await getPatient(appointmentData.userId);
   const appointment = {
     ...appointmentData,
-    patient: patient?.$id,
   };
   try {
     return await databases.createDocument(
