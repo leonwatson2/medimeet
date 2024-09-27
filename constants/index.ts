@@ -1,4 +1,6 @@
-export const GenderOptions = ['Male', 'Female', 'Other'] as const;
+import { RegistrationFormSchema } from "@/components/forms/Registration/RegistrationForm";
+
+export const GenderOptions = ["Male", "Female", "Other"] as const;
 
 export const Doctors = [
   {
@@ -51,4 +53,28 @@ export const IdentificationTypes = [
   "State ID Card",
   "Student ID Card",
   "Voter ID Card",
-];
+] as const;
+export const PatientFormDefaultValues: RegistrationFormSchema = {
+  name: "",
+  email: "",
+  phone: "",
+  birthDate: new Date(Date.now()),
+  gender: "Male" as Gender,
+  address: "",
+  occupation: "",
+  emergencyContactName: "",
+  emergencyContactNumber: "",
+  primaryPhysician: "",
+  insuranceProvider: "",
+  insurancePolicyNumber: "",
+  allergies: "",
+  currentMedication: "",
+  familyMedicalHistory: "",
+  pastMedicalHistory: "",
+  identificationType: "Birth Certificate",
+  identificationNumber: "",
+  identificationDocument: [],
+  treatmentConsent: false,
+  disclosureConsent: false,
+  privacyConsent: false,
+};

@@ -126,9 +126,9 @@ const RenderField = <T extends FieldValues>({
               checked={field.value}
               onChange={field.onChange}
             />
-            <FormLabel htmlFor={name} className="checkbox-label">
+            <label htmlFor={name} className="checkbox-label">
               {label}
-            </FormLabel>
+            </label>
           </div>
         </FormControl>
       );
@@ -186,6 +186,7 @@ export const CustomFormField = <T extends FieldValues>({
             field={field as ControllerRenderProps}
             fieldType={fieldType}
             name={name}
+            label={label}
             {...props}
           />
           <FormMessage className="shad-error" />

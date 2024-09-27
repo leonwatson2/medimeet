@@ -14,13 +14,17 @@ import { SelectItem } from "@/components/ui/select";
 import { CustomFormField } from "@/components/CustomFormField";
 import { FileUploader } from "@/components/FileUploader";
 import { SubmitButton } from "@/components/SubmitButton";
-import { Doctors, GenderOptions, IdentificationTypes } from "@/constants";
-import { loginFormSchema, registrationFormSchema } from "@/lib/validation";
-import { Twinkle_Star } from "next/font/google";
+import {
+  Doctors,
+  GenderOptions,
+  IdentificationTypes,
+  PatientFormDefaultValues,
+} from "@/constants";
+import { registrationFormSchema } from "@/lib/validation";
 
 const RegFormField = CustomFormField<RegistrationFormSchema>;
 
-type RegistrationFormSchema = z.infer<typeof registrationFormSchema>;
+export type RegistrationFormSchema = z.infer<typeof registrationFormSchema>;
 
 type RegistrationFormProps = {
   user: User;
@@ -29,15 +33,17 @@ export const RegistrationForm: FC<RegistrationFormProps> = ({ user }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const form = useForm<RegistrationFormSchema>({
-    resolver: zodResolver(loginFormSchema),
+    resolver: zodResolver(registrationFormSchema),
     defaultValues: {
-      name: "",
-      email: "",
-      phone: "",
+      ...PatientFormDefaultValues,
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
     },
   });
   const onSubmit = async (registrationData: RegistrationFormSchema) => {
     setIsLoading(true);
+
     console.log(registrationData, user);
   };
   return (
@@ -147,7 +153,7 @@ export const RegistrationForm: FC<RegistrationFormProps> = ({ user }) => {
           </TwoColumnGroup>
           <Header>Medical Information</Header>
           <RegFormField
-            name="Primary Care Physician"
+            name="primaryPhysician"
             label="Primary Care Physician"
             control={form.control}
             fieldType="select"
@@ -195,7 +201,7 @@ export const RegistrationForm: FC<RegistrationFormProps> = ({ user }) => {
             <RegFormField
               fieldType="textarea"
               label="Current Medications"
-              name="currentMedications"
+              name="currentMedication"
               control={form.control}
               placeholder="Current Medications"
             />
@@ -246,20 +252,27 @@ export const RegistrationForm: FC<RegistrationFormProps> = ({ user }) => {
               <FormControl>
                 <FileUploader onChange={field.onChange} files={field.value} />
               </FormControl>
-            )}/>
-            <Header> Consent and Privacy</Header>
-            <RegFormField
-              fieldType="checkbox"
-              label="I agree to the Terms and Conditions"
-              name="disclosureConsent"
-              control={form.control}
-              />
-              <RegFormField
-              fieldType="checkbox"
-              label="I agree to the Privacy Policy"
-              name="privacyConsent"
-              control={form.control}
-              />
+            )}
+          />
+          <Header> Consent and Privacy</Header>
+          <RegFormField
+            fieldType="checkbox"
+            label="I consent to receive treatment for my health."
+            name="treatmentConsent"
+            control={form.control}
+          />
+          <RegFormField
+            fieldType="checkbox"
+            label="I consent to the use and disclosure of my health information for treatment purposes."
+            name="disclosureConsent"
+            control={form.control}
+          />
+          <RegFormField
+            fieldType="checkbox"
+            label="I acknowledge that I have reviewed and agree to the privacy policy"
+            name="privacyConsent"
+            control={form.control}
+          />
           <SubmitButton isLoading={isLoading}>Submit Info</SubmitButton>
         </form>
       </Form>
