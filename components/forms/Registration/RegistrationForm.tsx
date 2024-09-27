@@ -1,6 +1,5 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { FC, ReactNode, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -15,13 +14,14 @@ import { CustomFormField } from "@/components/CustomFormField";
 import { FileUploader } from "@/components/FileUploader";
 import { SubmitButton } from "@/components/SubmitButton";
 import {
-  Doctors,
   GenderOptions,
   IdentificationTypes,
   PatientFormDefaultValues,
 } from "@/constants";
 import { createPatient } from "@/lib/actions/patient.action";
 import { registrationFormSchema } from "@/lib/validation";
+
+import { DoctorSelectFormField } from "../FormFields/DoctorSelectFormField";
 
 
 const RegFormField = CustomFormField<RegistrationFormSchema>;
@@ -181,27 +181,7 @@ export const RegistrationForm: FC<RegistrationFormProps> = ({ user }) => {
             />
           </TwoColumnGroup>
           <Header>Medical Information</Header>
-          <RegFormField
-            name="primaryPhysician"
-            label="Primary Care Physician"
-            control={form.control}
-            fieldType="select"
-          >
-            {Doctors.map((doctor) => (
-              <SelectItem key={doctor.name} value={doctor.name}>
-                <div className="flex items-center cursor-pointer gap-2">
-                  <Image
-                    src={doctor.image}
-                    width={32}
-                    height={32}
-                    alt={doctor.name}
-                    className="doctor-image"
-                  />
-                  <p>{doctor.name}</p>
-                </div>
-              </SelectItem>
-            ))}
-          </RegFormField>
+          <DoctorSelectFormField<RegistrationFormSchema> control={form.control} />
           <TwoColumnGroup>
             <RegFormField
               fieldType="input"

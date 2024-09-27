@@ -93,6 +93,7 @@ const RenderField = <T extends FieldValues>({
           />
           <FormControl>
             <DatePicker
+              wrapperClassName="date-picker"
               selected={field.value}
               onChange={(date) => field.onChange(date)}
               showTimeSelect={showTimeSelect}

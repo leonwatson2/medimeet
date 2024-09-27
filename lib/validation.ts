@@ -1,7 +1,8 @@
-import { GenderOptions } from "@/constants";
 
 import validator from "validator";
 import { z } from "zod";
+
+import { GenderOptions } from "@/constants";
 
 export const loginFormSchema = z.object({
   name: z
@@ -104,4 +105,16 @@ export const registrationFormSchema = z.object({
     .refine((value) => value === true, {
       message: "You must agree to the privacy consent",
     }),
+});
+export const appointmentFormSchema = z.object({
+  schedule: z.coerce.date({ message: "Please choose a preffered date and time." }),
+  note: z.string().optional(),
+  reason: z
+    .string()
+    .min(4, "Reason must be longer than 4 characters.")
+    .max(500, "Reason must be shorter than 500 characters."),
+  primaryPhysician: z
+    .string()
+    .min(2, "Primary Care Physician must be longer than 4 characters."),
+  cencellationReason: z.string().optional(),
 });

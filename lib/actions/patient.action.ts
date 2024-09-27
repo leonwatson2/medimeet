@@ -1,6 +1,8 @@
 "use server";
 import { ID, Query } from "node-appwrite";
 
+import { deleteFile, uploadFile } from "@/lib/actions/appwrite.actions";
+
 import {
   BUCKET_ID,
   databases,
@@ -10,7 +12,6 @@ import {
   PROJECT_ID,
   users,
 } from "../appwrite.config";
-import { deleteFile, uploadFile } from "@/lib/actions/appwrite.actions";
 
 export const createUser = async (user: CreateUserParams) => {
   try {
@@ -65,3 +66,16 @@ export const createPatient = async ({
     throw new Error("Something went wrong creating the patient")
   }
 };
+
+export const getPatient = async (userId: string) => {
+  try {
+    const patient = await databases.listDocuments(
+      DB_ID!,
+      PATIENT_COLLECTION!,
+      [Query.equal("userId", userId)],
+    );
+    return patient.documents[0];
+  } catch (error: any) {
+    console.error(error);
+  }
+}
