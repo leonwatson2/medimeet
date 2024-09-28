@@ -63,7 +63,7 @@ export const AppointmentForm: FC<AppointmentFormProps> = ({
         ...newAppointment,
       });
       router.push(
-        `/patients/${patient.$id}/new-appointments/success?appointmentId=${appointment.$id}`,
+        `/patients/${user.$id}/new-appointments/success?appointmentId=${appointment.$id}`,
       );
     } else {
       await updateAppointment({
