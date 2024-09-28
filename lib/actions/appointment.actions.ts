@@ -1,5 +1,5 @@
 "use server"
-import { ID } from "node-appwrite";
+import { ID, Query } from "node-appwrite";
 
 import { getDocumentAttributes } from "@/lib/actions/appwrite.actions";
 
@@ -57,3 +57,30 @@ export const getAppointment = async (appointmentId: string) => {
     console.error(error);
   }
 };
+
+export const getRecentAppointments = async () => {
+  try {
+    const appointments = await databases.listDocuments(DB_ID!, APPOINTMENT_COLLECTION!, [
+      Query.orderDesc('$createdAt'),
+    ]);
+    const counts = appointements?.documents.reduce((acc, appointment) => {
+      if (appointment.status === "scheduled") {
+        acc.scheduled += 1;
+      } else if (appointment.status === "pending") {
+        acc.pending += 1;
+      } else if (appointment.status === "cancelled") {
+        acc.cancelled += 1;
+      }
+      return acc;
+    },{ scheduled: 0, pending: 0, cancelled: 0 });
+
+    const data = {
+      totalCount: appointments.total,
+      ...counts,
+      documents: appointments.documents,
+    };
+  return data;
+  } catch (error: any) {
+    console.error(error);
+  }
+}

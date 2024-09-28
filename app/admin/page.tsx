@@ -2,7 +2,11 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { StatCard } from "@/components/StatCard";
-const Admin = () => {
+import { getRecentAppointments } from "@/lib/actions/appointment.actions";
+
+const Admin = async () => {
+  const data = await getRecentAppointments();
+  console.log(data);
   return (
     <div className="mx-auto flex max-w-7xl flex-col space-y-14">
       <header className="admin-header">
