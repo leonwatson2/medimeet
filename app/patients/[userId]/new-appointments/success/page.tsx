@@ -58,7 +58,7 @@ const SuccessPage: FC<SearchParamProps> = async ({
               alt="Dr."
               className="m-x-4"
             />
-            <p> Dr. {appointment.primaryPhysician} </p>
+            <p className="whitespace-nowrap"> Dr. {appointment.primaryPhysician} </p>
           </div>
           <div className="flex gap-2">
             <Image
@@ -70,7 +70,7 @@ const SuccessPage: FC<SearchParamProps> = async ({
             <p> {formatDateTime(appointment.schedule).dateTime} </p>
           </div>
           <Button variant="outline" className="shad-primary-btn" asChild>
-            <Link href={`/patients/${userId}/new-appointment`}>
+            <Link href={`/patients/${userId}/new-appointments`}>
               New Appointment
             </Link>
           </Button>
