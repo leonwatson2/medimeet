@@ -4,7 +4,10 @@ import { FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { createAppointment } from "@/lib/actions/appointment.actions";
+import {
+  createAppointment,
+  updateAppointment,
+} from "@/lib/actions/appointment.actions";
 import { appointmentFormSchema } from "@/lib/validation";
 import { Patient } from "@/types/appwrite.types";
 
@@ -12,12 +15,12 @@ import { CustomFormField } from "../CustomFormField";
 import { SubmitButton } from "../SubmitButton";
 import { Form } from "../ui/form";
 import { DoctorSelectFormField } from "./FormFields/DoctorSelectFormField";
+import { useRouter } from "next/navigation";
 
 type AppointmentFormSchema = z.infer<typeof appointmentFormSchema>;
-
 type AppointmentFormProps = {
   user: User;
-  type: "create" | "schedule" | "cancel";
+  type: AppointmentFormType;
   patient: Patient;
 };
 
@@ -33,6 +36,7 @@ export const AppointmentForm: FC<AppointmentFormProps> = ({
   patient,
   type,
 }) => {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const form = useForm<AppointmentFormSchema>({
     resolver: zodResolver(appointmentFormSchema),
@@ -40,12 +44,35 @@ export const AppointmentForm: FC<AppointmentFormProps> = ({
   });
   const onSubmit = async (appointmentData: AppointmentFormSchema) => {
     setIsLoading(true);
-    const data = {
-      userId: user.$id,
-      patient: patient.$id,
+    const status: Status = (
+      {
+        create: "pending",
+        schedule: "scheduled",
+        cancel: "cancelled",
+      } as Record<AppointmentFormType, Status>
+    )[type];
+    const newAppointment = {
+      status,
       ...appointmentData,
     };
-    await createAppointment(data);
+    const todo: string = patient.appointmentId;
+    if (type === "create") {
+      const appointment = await createAppointment({
+        userId: user.$id,
+        patient: patient.$id,
+        ...newAppointment,
+      });
+      router.push(
+        `/patients/${patient.$id}/new-appointments/success?appointmentId=${appointment.$id}`,
+      );
+    } else {
+      await updateAppointment({
+        userId: user.$id,
+        appointment: newAppointment,
+        appointmentId: todo,
+        type,
+      });
+    }
     setIsLoading(false);
   };
   return (
