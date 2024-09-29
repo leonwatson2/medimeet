@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React from "react";
+import React, { HTMLAttributes, HTMLInputAutoCompleteAttribute, InputHTMLAttributes, ReactNode } from "react";
 import DatePicker from "react-datepicker";
 import {
   Control,
@@ -44,6 +44,7 @@ const RenderField = <T extends FieldValues>({
   name,
   label,
   children,
+  autoComplete,
 }: { field: ControllerRenderProps } & Omit<CustomFormProps<T>, "control">) => {
   switch (fieldType) {
     case "input":
@@ -60,6 +61,7 @@ const RenderField = <T extends FieldValues>({
           )}
           <FormControl>
             <Input
+              autoComplete={autoComplete} 
               placeholder={placeholder}
               {...field}
               className="shad-input border-0"
@@ -71,6 +73,7 @@ const RenderField = <T extends FieldValues>({
       return (
         <FormControl>
           <PhoneInput
+            autoComplete="tel"
             defaultCountry="US"
             placeholder={placeholder}
             international
@@ -90,7 +93,7 @@ const RenderField = <T extends FieldValues>({
             width={24}
             alt="calendar"
             className="ml-2"
-          />
+        />
           <FormControl>
             <DatePicker
               wrapperClassName="date-picker"
@@ -140,6 +143,7 @@ const RenderField = <T extends FieldValues>({
             <Textarea
               placeholder={placeholder}
               {...field}
+              autoComplete={autoComplete}
               className="shad-textArea"
               disabled={field.disabled}
             />
@@ -165,7 +169,8 @@ type CustomFormProps<T extends FieldValues> = {
   dateFormat?: string;
   disabled?: boolean;
   showTimeSelect?: boolean;
-  children?: React.ReactNode;
+  autoComplete?: HTMLInputAutoCompleteAttribute;
+  children?: ReactNode;
   renderSkeleton?: (field: ControllerRenderProps) => React.ReactNode;
 };
 

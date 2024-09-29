@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 
 type StatCardProps = {
   type: "appointments" | "pending" | "cancelled";
-  count: number;
+  count?: number;
   label: string;
   icon: Icons;
 };
@@ -26,7 +26,7 @@ export const StatCard: FC<StatCardProps> = ({ type, count, label, icon }) => {
           width={32}
           height={32}
         />
-        <h2 className="text-32-bold text-white"> {count} </h2>
+        <h2 className="text-32-bold text-white"> {count !== undefined ? count : '?'} </h2>
       </div>
       <p className="text-14-regular">{label}</p>
     </div>

@@ -40,10 +40,8 @@ export const PatientForm = () => {
   });
   const onSubmit = async (userData: LoginFormSchema) => {
     setIsLoading(true);
-    console.log(userData);
     try {
       const user = await createUser(userData);
-      console.log(user);
       if(user) router.push(`/patients/${user.$id}/register`);
     } catch (error) {
       console.error(error);

@@ -22,7 +22,7 @@ const Page: FC<SearchParamProps> = async ({ params: { userId } }) => {
             alt="patient"
             className="mb-12 h-10 w-fit"
           />
-          <AppointmentForm user={user} patient={patient} type="create" />
+          <AppointmentForm userId={user.$id} patientId={patient.$id} type="create" />
         </div>
       </section>
       <Image

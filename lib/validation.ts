@@ -116,5 +116,5 @@ export const appointmentFormSchema = z.object({
   primaryPhysician: z
     .string()
     .min(2, "Primary Care Physician must be longer than 4 characters."),
-  cencellationReason: z.string().optional(),
+  cancellationReason: z.string().optional(),
 });

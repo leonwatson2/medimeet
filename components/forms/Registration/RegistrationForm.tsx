@@ -105,6 +105,7 @@ export const RegistrationForm: FC<RegistrationFormProps> = ({ user }) => {
               control={form.control}
               placeholder="Email"
               iconSrc="email.svg"
+              autoComplete="email"
             />
             <RegFormField
               fieldType="phoneInput"
@@ -112,6 +113,7 @@ export const RegistrationForm: FC<RegistrationFormProps> = ({ user }) => {
               name="phone"
               control={form.control}
               placeholder="Phone Number"
+              autoComplete="tel"
             />
           </TwoColumnGroup>
           <TwoColumnGroup>
@@ -155,6 +157,7 @@ export const RegistrationForm: FC<RegistrationFormProps> = ({ user }) => {
               name="address"
               control={form.control}
               placeholder="121 Lost Island St."
+              autoComplete="address-line1"
             />
             <RegFormField
               fieldType="input"

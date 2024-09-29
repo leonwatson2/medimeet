@@ -4,6 +4,7 @@ import { ID, Query } from "node-appwrite";
 import { getDocumentAttributes } from "@/lib/actions/appwrite.actions";
 
 import { APPOINTMENT_COLLECTION, databases, DB_ID } from "../appwrite.config";
+import { revalidatePath } from "next/cache";
 
 export const createAppointment = async (appointmentData: CreateAppointmentParams) => {
   const appointment = {
@@ -22,14 +23,16 @@ export const createAppointment = async (appointmentData: CreateAppointmentParams
   }
 };
 
-export const updateAppointment = async (appointmentData: UpdateAppointmentParams) => {
+export const updateAppointment = async ({ appointmentId, appointment }: UpdateAppointmentParams) => {
   try {
-    return await databases.updateDocument(
+    const updatedDoc = await databases.updateDocument(
       DB_ID!,
       APPOINTMENT_COLLECTION!,
-      appointmentData.appointmentId,
-      appointmentData,
+      appointmentId,
+      appointment,
     );
+    revalidatePath("/admin");
+    return updatedDoc;
   } catch (error: any) {
     console.error(error);
     throw new Error("Failed to update appointment");
@@ -63,7 +66,7 @@ export const getRecentAppointments = async () => {
     const appointments = await databases.listDocuments(DB_ID!, APPOINTMENT_COLLECTION!, [
       Query.orderDesc('$createdAt'),
     ]);
-    const counts = appointements?.documents.reduce((acc, appointment) => {
+    const counts = appointments?.documents.reduce((acc, appointment) => {
       if (appointment.status === "scheduled") {
         acc.scheduled += 1;
       } else if (appointment.status === "pending") {
@@ -72,15 +75,15 @@ export const getRecentAppointments = async () => {
         acc.cancelled += 1;
       }
       return acc;
-    },{ scheduled: 0, pending: 0, cancelled: 0 });
+    }, { scheduled: 0, pending: 0, cancelled: 0 });
 
     const data = {
       totalCount: appointments.total,
-      ...counts,
+      counts,
       documents: appointments.documents,
     };
-  return data;
+    return data;
   } catch (error: any) {
-    console.error(error);
+    console.log(error);
   }
 }

@@ -56,7 +56,7 @@ export const PasskeyModal: FC<PasskeyModalProps> = () => {
     }
   };
   return (
-    <AlertDialog open={open} onOpenChange={setOpen}>
+    <AlertDialog  open={open} onOpenChange={setOpen}>
       <AlertDialogContent className="shad-alert-dialog">
         <AlertDialogHeader>
           <AlertDialogTitle className="flex items-start justify-between">

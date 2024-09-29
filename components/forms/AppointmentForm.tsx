@@ -1,6 +1,7 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FC, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Dispatch, FC, SetStateAction, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -9,19 +10,20 @@ import {
   updateAppointment,
 } from "@/lib/actions/appointment.actions";
 import { appointmentFormSchema } from "@/lib/validation";
-import { Patient } from "@/types/appwrite.types";
+import { Appointment } from "@/types/appwrite.types";
 
 import { CustomFormField } from "../CustomFormField";
 import { SubmitButton } from "../SubmitButton";
 import { Form } from "../ui/form";
 import { DoctorSelectFormField } from "./FormFields/DoctorSelectFormField";
-import { useRouter } from "next/navigation";
 
 type AppointmentFormSchema = z.infer<typeof appointmentFormSchema>;
 type AppointmentFormProps = {
-  user: User;
+  userId: string;
   type: AppointmentFormType;
-  patient: Patient;
+  patientId: string;
+  appointment?: Appointment;
+  setOpen?: Dispatch<SetStateAction<boolean>>;
 };
 
 const AppFormField = CustomFormField<AppointmentFormSchema>;
@@ -32,15 +34,23 @@ const PROMPT_TEXT = {
 };
 
 export const AppointmentForm: FC<AppointmentFormProps> = ({
-  user,
-  patient,
+  userId,
+  patientId,
   type,
+  appointment,
+  setOpen,
 }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const form = useForm<AppointmentFormSchema>({
     resolver: zodResolver(appointmentFormSchema),
-    defaultValues: {},
+    defaultValues: {
+      reason: appointment?.reason || "",
+      note: appointment?.note || "",
+      primaryPhysician: appointment?.primaryPhysician || "",
+      cancellationReason: appointment?.cancellationReason || "",
+      schedule: appointment?.schedule ? new Date(appointment.schedule) : new Date(Date.now()),
+    },
   });
   const onSubmit = async (appointmentData: AppointmentFormSchema) => {
     setIsLoading(true);
@@ -55,23 +65,27 @@ export const AppointmentForm: FC<AppointmentFormProps> = ({
       status,
       ...appointmentData,
     };
-    const todo: string = patient.appointmentId;
     if (type === "create") {
       const appointment = await createAppointment({
-        userId: user.$id,
-        patient: patient.$id,
+        userId: userId,
+        patient: patientId,
         ...newAppointment,
       });
       router.push(
-        `/patients/${user.$id}/new-appointments/success?appointmentId=${appointment.$id}`,
+        `/patients/${userId}/new-appointments/success?appointmentId=${appointment.$id}`,
       );
     } else {
-      await updateAppointment({
-        userId: user.$id,
+      console.log('ID:', appointment?.$id);
+      const updatedAppointment = await updateAppointment({
+        userId: userId,
         appointment: newAppointment,
-        appointmentId: todo,
+        appointmentId: appointment?.$id,
         type,
       });
+      if (updatedAppointment) {
+        setOpen && setOpen(false);
+        form.reset();
+      }
     }
     setIsLoading(false);
   };
@@ -84,15 +98,10 @@ export const AppointmentForm: FC<AppointmentFormProps> = ({
         >
           <section className="space-y-4">
             {type === "create" && (
-              <h1 className="header"> Hey {user?.name} 🍋</h1>
-            )}
-            {type === "schedule" && (
-              <h1 className="header"> Schedule an Appointment</h1>
-            )}
-            {type === "cancel" && (
-              <h1 className="header"> Cancel Appointment</h1>
-            )}
-            <p className="text-dark-700">{PROMPT_TEXT[type]}</p>
+              <>
+                <h1 className="header"> Hey Let&#39; get you on the calendar 🍋</h1>
+                <p className="text-dark-700">{PROMPT_TEXT[type]}</p>
+              </>)}
           </section>
           {type !== "cancel" && (
             <DoctorSelectFormField<AppointmentFormSchema>
@@ -100,21 +109,30 @@ export const AppointmentForm: FC<AppointmentFormProps> = ({
             />
           )}
           <div className="flex flex-col gap-6 xl:flex-row">
-            <AppFormField
-              name="reason"
-              label="Reason for Appointment"
-              placeholder="ex: Annual montly check-up"
+            {type === "create" && (
+              <>
+                <AppFormField
+                  name="reason"
+                  label="Reason for Appointment"
+                  placeholder="ex: Annual montly check-up"
+                  control={form.control}
+                  fieldType="textarea"
+                />
+                <AppFormField
+                  name="note"
+                  label="Additional comments/notes"
+                  placeholder="ex: Prefer afternoon appointments, if possible"
+                  control={form.control}
+                  fieldType="textarea"
+                />
+              </>)}
+            {type === "cancel" && (<AppFormField
+              name="cancellationReason"
+              label="Reason for Appointment Cancellation"
+              placeholder="ex: Something came up, I'll reschedule"
               control={form.control}
               fieldType="textarea"
             />
-            {type === "create" && (
-              <AppFormField
-                name="note"
-                label="Additional comments/notes"
-                placeholder="ex: Prefer afternoon appointments, if possible"
-                control={form.control}
-                fieldType="textarea"
-              />
             )}
           </div>
           {type !== "cancel" && (
