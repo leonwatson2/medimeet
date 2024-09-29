@@ -1,10 +1,10 @@
 "use server"
+import { revalidatePath } from "next/cache";
 import { ID, Query } from "node-appwrite";
 
 import { getDocumentAttributes } from "@/lib/actions/appwrite.actions";
 
 import { APPOINTMENT_COLLECTION, databases, DB_ID } from "../appwrite.config";
-import { revalidatePath } from "next/cache";
 
 export const createAppointment = async (appointmentData: CreateAppointmentParams) => {
   const appointment = {

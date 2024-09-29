@@ -1,8 +1,8 @@
 import Image from "next/image";
 import { FC } from "react";
 
-import { Icons } from "@/types/types";
 import { cn } from "@/lib/utils";
+import { Icons } from "@/types/types";
 
 type StatCardProps = {
   type: "appointments" | "pending" | "cancelled";

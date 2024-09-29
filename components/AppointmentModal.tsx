@@ -21,7 +21,9 @@ export const AppointmentModal: FC<AppointmentModalProps> = ({ appointment, type,
   const [isOpen, setOpen] = useState(false)
   return (<Dialog open={isOpen} onOpenChange={setOpen}>
     <DialogTrigger asChild>
-      <Button disabled={type === 'cancel' && appointment.status === 'cancelled'} variant={"ghost"} className={cn("capitalize transition", { "text-green-500": type === "schedule" })} >
+      <Button disabled={type === 'cancel' && appointment.status === 'cancelled'} 
+              variant={"ghost"} 
+              className={cn("capitalize transition", { "text-green-500": type === "schedule" })} >
         {type}
       </Button>
     </DialogTrigger>
