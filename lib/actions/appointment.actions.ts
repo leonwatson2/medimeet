@@ -4,8 +4,9 @@ import { revalidatePath } from "next/cache";
 import { ID, Query } from "node-appwrite";
 
 import { getDocumentAttributes } from "@/lib/actions/appwrite.actions";
+import { formatDateTime } from "@/lib/utils";
 
-import { APPOINTMENT_COLLECTION, databases, DB_ID } from "../appwrite.config";
+import { APPOINTMENT_COLLECTION, databases, DB_ID, messaging } from "../appwrite.config";
 
 export const createAppointment = async (appointmentData: CreateAppointmentParams) => {
   const appointment = {
@@ -24,7 +25,7 @@ export const createAppointment = async (appointmentData: CreateAppointmentParams
   }
 };
 
-export const updateAppointment = async ({ appointmentId, appointment }: UpdateAppointmentParams) => {
+export const updateAppointment = async ({ userId, appointmentId, appointment }: UpdateAppointmentParams) => {
   try {
     const updatedDoc = await databases.updateDocument(
       DB_ID!,
@@ -33,6 +34,10 @@ export const updateAppointment = async ({ appointmentId, appointment }: UpdateAp
       appointment,
     );
     revalidatePath("/admin");
+  
+    const smsMessage = `Your appointment has been ${appointment.status} for ${formatDateTime(appointment.schedule).dateTime}`;
+    sendSMSNotification(userId, smsMessage); 
+
     return updatedDoc;
   } catch (error: any) {
     console.error(error);
@@ -88,3 +93,31 @@ export const getRecentAppointments = async () => {
     console.log(error);
   }
 }
+
+export const sendSMSNotification = async (userId:string, content:string) => {
+
+  try {
+    const messageResponse = await messaging.createSms(ID.unique(), content, [], [userId]);
+    return messageResponse;
+  } catch (error: any) {
+    console.error(error);
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
