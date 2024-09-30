@@ -40,6 +40,14 @@ export const AppointmentForm: FC<AppointmentFormProps> = ({
   appointment,
   setOpen,
 }) => {
+  if (
+    type !== "create" &&
+    (setOpen === undefined || appointment === undefined)
+  ) {
+    throw Error(
+      "Looks like you're using this component wrong. Must have an appointment and setOpen for cancel and schedule types",
+    );
+  }
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const form = useForm<AppointmentFormSchema>({
@@ -49,7 +57,9 @@ export const AppointmentForm: FC<AppointmentFormProps> = ({
       note: appointment?.note || "",
       primaryPhysician: appointment?.primaryPhysician || "",
       cancellationReason: appointment?.cancellationReason || "",
-      schedule: appointment?.schedule ? new Date(appointment.schedule) : new Date(Date.now()),
+      schedule: appointment?.schedule
+        ? new Date(appointment.schedule)
+        : new Date(Date.now()),
     },
   });
   const onSubmit = async (appointmentData: AppointmentFormSchema) => {
@@ -75,15 +85,14 @@ export const AppointmentForm: FC<AppointmentFormProps> = ({
         `/patients/${userId}/new-appointments/success?appointmentId=${appointment.$id}`,
       );
     } else {
-      console.log('ID:', appointment?.$id);
       const updatedAppointment = await updateAppointment({
         userId: userId,
         appointment: newAppointment,
-        appointmentId: appointment?.$id,
+        appointmentId: appointment!.$id,
         type,
       });
-      if (updatedAppointment) {
-        setOpen && setOpen(false);
+      if (updatedAppointment && setOpen) {
+        setOpen(false);
         form.reset();
       }
     }
@@ -99,25 +108,30 @@ export const AppointmentForm: FC<AppointmentFormProps> = ({
           <section className="space-y-4">
             {type === "create" && (
               <>
-                <h1 className="header"> Hey Let&#39; get you on the calendar 🍋</h1>
+                <h1 className="header">
+                  Hey Let&#39; get you on the calendar 🍋
+                </h1>
                 <p className="text-dark-700">{PROMPT_TEXT[type]}</p>
-              </>)}
+              </>
+            )}
           </section>
           {type !== "cancel" && (
-            <DoctorSelectFormField<AppointmentFormSchema>
-              control={form.control}
-            />
+            <>
+              <DoctorSelectFormField<AppointmentFormSchema>
+                control={form.control}
+              />
+              <AppFormField
+                name="reason"
+                label="Reason for Appointment"
+                placeholder="ex: Annual montly check-up"
+                control={form.control}
+                fieldType="textarea"
+              />
+            </>
           )}
           <div className="flex flex-col gap-6 xl:flex-row">
             {type === "create" && (
               <>
-                <AppFormField
-                  name="reason"
-                  label="Reason for Appointment"
-                  placeholder="ex: Annual montly check-up"
-                  control={form.control}
-                  fieldType="textarea"
-                />
                 <AppFormField
                   name="note"
                   label="Additional comments/notes"
@@ -125,14 +139,16 @@ export const AppointmentForm: FC<AppointmentFormProps> = ({
                   control={form.control}
                   fieldType="textarea"
                 />
-              </>)}
-            {type === "cancel" && (<AppFormField
-              name="cancellationReason"
-              label="Reason for Appointment Cancellation"
-              placeholder="ex: Something came up, I'll reschedule"
-              control={form.control}
-              fieldType="textarea"
-            />
+              </>
+            )}
+            {type === "cancel" && (
+              <AppFormField
+                name="cancellationReason"
+                label="Reason for Appointment Cancellation"
+                placeholder="ex: Something came up, I'll reschedule"
+                control={form.control}
+                fieldType="textarea"
+              />
             )}
           </div>
           {type !== "cancel" && (

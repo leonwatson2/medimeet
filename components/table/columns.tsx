@@ -80,7 +80,7 @@ export const columns: ColumnDef<Appointment>[] = [
           <AppointmentModal
             type="cancel"
             title="Cancel Appointment"
-            description="Confirp appointment details"
+            description="Confirm appointment details"
             appointment={appointment}
             userId={appointment.userId}
             patientId={appointment.patient.$id} />

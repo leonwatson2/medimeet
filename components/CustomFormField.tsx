@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React, { HTMLAttributes, HTMLInputAutoCompleteAttribute, InputHTMLAttributes, ReactNode } from "react";
+import React, { HTMLInputAutoCompleteAttribute, ReactNode } from "react";
 import DatePicker from "react-datepicker";
 import {
   Control,
