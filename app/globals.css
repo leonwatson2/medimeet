@@ -273,7 +273,10 @@
 
   /* =====  REACT PHONE NUMBER INPUT OVERRIDES */
   .input-phone {
-    @apply mt-2 h-11 rounded-md px-3 text-sm border bg-dark-400 placeholder:text-dark-600 border-dark-500 !important;
+    @apply mt-2 h-11 rounded-md px-3 text-sm border bg-dark-400 placeholder:text-dark-600 border-dark-500  !important;
+  }
+  .input-phone input{
+    @apply disabled:opacity-70 cursor-not-allowed;
   }
 
   /* =====  REACT DATE PICKER OVERRIDES */

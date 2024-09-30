@@ -45,6 +45,7 @@ const RenderField = <T extends FieldValues>({
   label,
   children,
   autoComplete,
+  disabled,
 }: { field: ControllerRenderProps } & Omit<CustomFormProps<T>, "control">) => {
   switch (fieldType) {
     case "input":
@@ -64,6 +65,7 @@ const RenderField = <T extends FieldValues>({
               autoComplete={autoComplete} 
               placeholder={placeholder}
               {...field}
+              disabled={disabled}
               className="shad-input border-0"
             />
           </FormControl>
@@ -78,6 +80,7 @@ const RenderField = <T extends FieldValues>({
             placeholder={placeholder}
             international
             value={field.value}
+            disabled={disabled}
             onChange={field.onChange}
             withCountryCallingCode
             className="input-phone"
@@ -109,7 +112,7 @@ const RenderField = <T extends FieldValues>({
     case "select":
       return (
         <FormControl>
-          <Select onValueChange={field.onChange} defaultValue={field.value}>
+          <Select disabled={disabled} onValueChange={field.onChange} defaultValue={field.value}>
             <FormControl>
               <SelectTrigger className="shad-select-trigger">
                 <SelectValue placeholder={placeholder} />
@@ -129,6 +132,7 @@ const RenderField = <T extends FieldValues>({
               id={name}
               checked={field.value}
               onCheckedChange={field.onChange}
+              disabled={disabled}
             />
             <label htmlFor={name} className="checkbox-label">
               {label}
@@ -145,7 +149,7 @@ const RenderField = <T extends FieldValues>({
               {...field}
               autoComplete={autoComplete}
               className="shad-textArea"
-              disabled={field.disabled}
+              disabled={disabled}
             />
           </FormControl>
         </div>

@@ -41,10 +41,12 @@ export const PatientForm = () => {
   const onSubmit = async (userData: LoginFormSchema) => {
     setIsLoading(true);
     try {
+      await new Promise(r=>setTimeout(r,2999))
       const user = await createUser(userData);
       if(user) router.push(`/patients/${user.$id}/register`);
     } catch (error) {
-      console.error(error);
+      console.log(error);
+      setIsLoading(false)
     }
   };
   return (
@@ -65,6 +67,7 @@ export const PatientForm = () => {
             control={form.control}
             placeholder="ChaseName"
             iconSrc="user.svg"
+            disabled={isLoading}
           />
           <LoginFormField
             fieldType="input"
@@ -73,6 +76,7 @@ export const PatientForm = () => {
             control={form.control}
             placeholder="johnlocke@lost.com"
             iconSrc="email.svg"
+            disabled={isLoading}
           />
           <LoginFormField
             fieldType="phoneInput"
@@ -80,6 +84,7 @@ export const PatientForm = () => {
             label="Phone Number"
             control={form.control}
             placeholder="(392) 123-4567"
+            disabled={isLoading}
           />
           <SubmitButton isLoading={isLoading}>Get Started</SubmitButton>
         </form>
