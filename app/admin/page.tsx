@@ -49,7 +49,7 @@ const Admin = async () => {
             icon="cancelled.svg"
           />
         </section>
-        <DataTable data={data?.documents} columns={columns} />
+        <DataTable data={data?.documents} columns={columns} /> 
       </main>
     </div>
   );

@@ -55,3 +55,9 @@ declare type UpdateAppointmentParams = {
   appointment: Appointment;
   type: AppointmentFormType;
 };
+
+declare type GetRecentAppointmentsReturnType = {
+  totalCount: number;
+  counts: { scheduled: number; pending: number; cancelled: number };
+  documents: Array<Appointment>;
+};

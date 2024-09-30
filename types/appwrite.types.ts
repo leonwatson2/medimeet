@@ -34,3 +34,8 @@ export interface Appointment extends Models.Document {
   userId: string;
   cancellationReason: string | null;
 }
+
+export interface SMSMessage extends Models.Document {
+  messageFormat: string;
+  type: 'scheduled' | 'cancelled';
+}
