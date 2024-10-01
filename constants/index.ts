@@ -85,3 +85,18 @@ export const StatusIcon = {
   pending: "/assets/icons/pending.svg",
   cancelled: "/assets/icons/cancelled.svg",
 };
+export const Compliments = [ 
+  "Hello, Genius 🧠",
+  "Hello, Beautiful 🌺",
+  "Hello, Handsome 🌟",
+  "Hello, Visionary 🚀",
+  "Hello, Leader 🏆",
+  "Hello, Champion 🥇",
+  "Hello, Superstar 🌟",
+  "Hello, Rockstar 🎸",
+  "Hello, Legend 🏅",
+  "Hello, Warrior ⚔️",
+  "Hello, Trailblazer 🌠",
+  "Hello, Innovator 🧪",
+  "Hello, Hero 🦸",
+]
