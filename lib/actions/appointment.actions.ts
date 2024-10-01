@@ -5,6 +5,7 @@ import { ID, Query } from "node-appwrite";
 
 import { getDocumentAttributes } from "@/lib/actions/appwrite.actions";
 import { formatDateTime } from "@/lib/utils";
+import { Appointment, SMSMessage } from "@/types/appwrite.types";
 
 import {
   APPOINTMENT_COLLECTION,
@@ -15,7 +16,6 @@ import {
   SMS_CANCELLED_DOC_ID,
   SMS_SCHEDULED_DOC_ID,
 } from "../appwrite.config";
-import { Appointment, SMSMessage } from "@/types/appwrite.types";
 
 export const createAppointment = async (
   appointmentData: CreateAppointmentParams,

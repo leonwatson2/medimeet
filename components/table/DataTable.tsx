@@ -7,6 +7,7 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -79,24 +80,29 @@ export function DataTable<TData, TValue>({
           )}
         </TableBody>
       </Table>
-      <div className="flex items-center justify-end space-x-2 py-4">
+      <div className="flex items-center justify-end space-x-2 py-4 table-actions">
         {data !== undefined && (
           <>
             <Button
               variant="outline"
               size="sm"
+              className="shad-gray-btn"
               onClick={() => table.previousPage()}
               disabled={!table.getCanPreviousPage()}
             >
-              Previous
+            <Image src="/assets/icons/arrow.svg" alt="Prev Button" width={20} height={20} />
+              
             </Button>
+
             <Button
               variant="outline"
               size="sm"
+              className="shad-gray-btn"
               onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}
             >
-              Next
+            <Image src="/assets/icons/arrow.svg" className="rotate-180" alt="Next Button" width={20} height={20} />
+              
             </Button>
           </>
         )}
