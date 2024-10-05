@@ -59,21 +59,7 @@ A comprehensive healthcare patient management system enabling patients to regist
 
 👉 **Manage and Track Application Performance Using Sentry**: The application uses Sentry to monitor and track its performance and detect any errors.
 
-
-## <a name="responsive">🎨 Responsive Design using Figma Designs</a>
-
-### 🖥️ Large Devices
-
-![XLPatient](https://github.com/user-attachments/assets/ee437ab0-1edf-4eb8-bf61-8171e8fc337e)
+👉 **🎨 Responsive Design using Figma Designs**: Was made off of figma designs with a mobile first approach to development
 
 
-<table>
-  <tr>
-    <th>📱 Small Devices</th>
-    <th>🤪 Medium Devices</th>
-  </tr>
-  <tr>
-    <td style="width:50%;height:200px;"> <img height="40%" widht="40%" src="https://github.com/user-attachments/assets/cc1cbe83-72f8-428a-a9df-22890f9dfeef" alt="smPatient page"/ > </td>
-    <td> <img src="https://github.com/user-attachments/assets/15ac5620-df1c-46d4-93bb-b8c9d5aaffe6" alt="mdPatient page" </td>
-  </tr>
-</table>
+
