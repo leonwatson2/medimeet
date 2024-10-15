@@ -61,5 +61,7 @@ A comprehensive healthcare patient management system enabling patients to regist
 
 👉 **🎨 Responsive Design using Figma Designs**: Was made off of figma designs with a mobile first approach to development
 
+## Employer Poking Around
 
+If you want to poke around you can fill out the form to see the process that the patient would go through or go to admin section by clicking the admin button and type in the password <code>123546</code>.
 
