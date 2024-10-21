@@ -37,5 +37,5 @@ export interface Appointment extends Models.Document {
 
 export interface SMSMessage extends Models.Document {
   messageFormat: string;
-  type: 'scheduled' | 'cancelled';
+  type: Exclude<Status, 'pending'> 
 }
